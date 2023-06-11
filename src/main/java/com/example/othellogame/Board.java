@@ -376,5 +376,85 @@ public class Board {
 
         return score;
     }
+    
+        // calculate stability
+        int[][] stabilityBoard = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (BOARD[i][j] == player) {
+                    stabilityBoard[i][j] = getStability(BOARD,player);
+                    stability += stabilityBoard[i][j];
+                }
+            }
+        }
+        evaporation=evaporationHeuristic();
+        // combine mobility and stability into a single score
+        int score = mobility + ( stability*8)+evaporation;
+
+        return score;
+    }
+    private int[][] copyBoard(int[][] board) {
+        int[][] newBoard = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                newBoard[row][col] = board[row][col];
+            }
+        }
+        return newBoard;
+    }
+    private void makeMove(int[][] board, int row, int col, int player) {
+        board[row][col] = player;
+    }
+    List<int[]> getValidMoves(int[][] board,int player){
+        List<int[]> validMoves = new ArrayList<>();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (isValidMove(i, j, currentPlayer)) {
+                    validMoves.add(new int[] {i, j});
+                }
+            }
+        }
+        return validMoves;
+    }
+
+    private int[] minimax(int[][] board, int depth, int maxDepth, int player, boolean maximizingPlayer, int alpha, int beta) {
+        List<int[]> validMoves = getValidMoves(board, player);
+
+        if (depth == maxDepth || validMoves.size() == 0) {
+            return new int[]{-1, -1, heuristic(player)};
+        }
+
+        int bestRow = -1;
+        int bestCol = -1;
+        int bestScore = maximizingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+        for (int[] move : validMoves) {
+            int[][] newBoard = copyBoard(board);
+            makeMove(newBoard, move[0], move[1], player);
+            int[] score = minimax(newBoard, depth + 1, maxDepth, player == 1 ? 2 : 1, !maximizingPlayer, alpha, beta);
+
+            if (maximizingPlayer) {
+                if (score[2] > bestScore) {
+                    bestScore = score[2];
+                    bestRow = move[0];
+                    bestCol = move[1];
+                }
+                alpha = Math.max(alpha, bestScore);
+            } else {
+                if (score[2] < bestScore) {
+                    bestScore = score[2];
+                    bestRow = move[0];
+                    bestCol = move[1];
+                }
+                beta = Math.min(beta, bestScore);
+            }
+
+            if (beta <= alpha) {
+                break;
+            }
+        }
+
+        return new int[]{bestRow, bestCol, bestScore};
+    }
 
 }
