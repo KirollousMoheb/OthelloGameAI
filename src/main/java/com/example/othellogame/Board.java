@@ -344,5 +344,37 @@ public class Board {
         total_board_goodness = count_goodness + positional_goodness;
         return total_board_goodness;
     }
+    
+    
+    
+    private int heuristic(int player) {
+        int mobility = 0;
+        int stability = 0;
+        int evaporation=0;
+        // calculate mobility
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (isValidMove(i, j, player)) {
+                    mobility++;
+                }
+            }
+        }
+
+        // calculate stability
+        int[][] stabilityBoard = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (BOARD[i][j] == player) {
+                    stabilityBoard[i][j] = getStability(BOARD,player);
+                    stability += stabilityBoard[i][j];
+                }
+            }
+        }
+        evaporation=evaporationHeuristic();
+        // combine mobility and stability into a single score
+        int score = mobility + ( stability*8)+evaporation;
+
+        return score;
+    }
 
 }
