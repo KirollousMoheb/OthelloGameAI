@@ -254,4 +254,95 @@ public class Board {
 
         }
     }
+    
+        private void endGame() {
+        calculateScore();
+        String winnerText;
+        if (player1Score > player2Score) {
+            winnerText = "White Player Wins!";
+        } else if (player2Score > player1Score) {
+            winnerText = "Black Player Wins!";
+        } else {
+            winnerText = "Tie Game!";
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.setTitle("GameOver!");
+        alert.setHeaderText(winnerText);
+        alert.setContentText("White Player final Score:"+player1Score+"\n"+"Black Player final Score:"+player2Score);
+        alert.showAndWait();
+        resetGame();
+    }
+    public void setAIMode(int mode) {
+        this.mode = mode;
+    }
+    public void resetGame() {
+        // Reset the board to its initial state
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                BOARD[i][j] = 0;
+            }
+        }
+        BOARD[3][3] = 1;
+        BOARD[4][4] = 1;
+        BOARD[3][4] = 2;
+        BOARD[4][3] = 2;
+
+        // Remove all the pieces from the board
+        root.getChildren().removeIf(node -> node instanceof Circle);
+
+        // Reset the scores and labels
+        player1Score = 0;
+        player2Score = 0;
+        currentPlayer = 2;
+        updateLabels();
+
+        // Redraw the board and pieces
+        drawBoard();
+    }
+    private static final int[][] STABILITY = {
+            {4, -3, 2, 2, 2, 2, -3, 4},
+            {-3, -4, -1, -1, -1, -1, -4, -3},
+            {2, -1, 1, 0, 0, 1, -1, 2},
+            {2, -1, 0, 1, 1, 0, -1, 2},
+            {2, -1, 0, 1, 1, 0, -1, 2},
+            {2, -1, 1, 0, 0, 1, -1, 2},
+            {-3, -4, -1, -1, -1, -1, -4, -3},
+            {4, -3, 2, 2, 2, 2, -3, 4}
+    };
+
+    private int getStability(int[][] board, int player) {
+        int stability = 0;
+        int opponent = player == 1 ? 2 : 1;
+
+        // Count stable pieces
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (board[i][j] == player) {
+                    stability += STABILITY[i][j];
+                }
+            }
+        }
+
+        return stability;
+    }
+
+    private int evaporationHeuristic(){
+        int early_game =player1Score+player2Score;
+        int count_goodness=0;
+        int positional_goodness=0;
+        int total_board_goodness=0;
+        if(early_game<15){
+             count_goodness=5*(player1Score-player2Score);
+
+        }else{
+            count_goodness=5*(player2Score-player1Score);
+
+        }
+        positional_goodness = 4*getStability(BOARD,currentPlayer);
+        total_board_goodness = count_goodness + positional_goodness;
+        return total_board_goodness;
+    }
+
 }
