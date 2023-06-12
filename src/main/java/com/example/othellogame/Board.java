@@ -456,5 +456,71 @@ public class Board {
 
         return new int[]{bestRow, bestCol, bestScore};
     }
+    private int[] getBestMove(int[][] board, int depth, int player) {
+        int[] result = minimax(board, 0, depth, player, true, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        return new int[]{result[0], result[1]};
+    }
+    private void makeAIMove() {
+        int[] move = getBestMove(BOARD, depth, currentPlayer);
+        int row = move[0];
+        int col = move[1];
+        handleTileClicked(row,col);
+    }
+
+
+    private void calculateScore(){
+        player1Score=0;
+        player2Score=0;
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (BOARD[i][j] == 1) {
+                    player1Score++;
+                } else if (BOARD[i][j] == 2) {
+                    player2Score++;
+                }
+            }
+        }
+    }
+    private void updateLabels() {
+        calculateScore();
+        scoreLabel.setText("White Score: " + player1Score + "|Black Score: " + player2Score);
+        playerLabel.setText("Current player: " + (currentPlayer==1?"White Player":"Black Player"));
+        playerLabel.setTextFill(currentPlayer == 1 ? PLAYER1_COLOR : PLAYER2_COLOR);
+    }
+    public void addEvents(){
+        // Add mouse click event to the game board tiles
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (isValidMove(i, j, currentPlayer)) {
+                    Circle validMove = new Circle(TILE_SIZE / 2 - 10, Color.TRANSPARENT);
+                    validMove.setStroke(currentPlayer == 1 ? PLAYER1_COLOR : PLAYER2_COLOR);
+                    validMove.setStrokeWidth(5);
+                    validMove.setCenterX(j * TILE_SIZE + TILE_SIZE / 2);
+                    validMove.setCenterY(i * TILE_SIZE + TILE_SIZE / 2);
+                    validMove.setOnMouseClicked(tileClicked);
+                    root.getChildren().add(validMove);
+                }
+            }
+        }
+    }
+    EventHandler<MouseEvent> tileClicked = event -> {
+        // Get the clicked tile
+        Node clickedNode = (Node) event.getSource();
+        if(clickedNode instanceof Circle){
+            Circle clickedCircle = (Circle) clickedNode;
+            int circleRow = (int) clickedCircle.getCenterY() / TILE_SIZE;
+            int circleCol = (int) clickedCircle.getCenterX() / TILE_SIZE;
+            handleTileClicked(circleRow, circleCol);
+
+        }else if(clickedNode instanceof Rectangle){
+            // handle rectangle click
+            Rectangle clickedRectangle = (Rectangle) clickedNode;
+            // get the row and col of the clicked rectangle
+            int rectangleRow = (int) clickedRectangle.getY() / TILE_SIZE;
+            int rectangleCol = (int) clickedRectangle.getX() / TILE_SIZE;
+            handleTileClicked(rectangleRow, rectangleCol);
+
+        }
+    };
 
 }
