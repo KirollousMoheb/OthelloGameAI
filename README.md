@@ -17,7 +17,7 @@ This repository contains the source code and resources for the Project Name. It 
 
 ## Introduction
 
-Provide a brief introduction to the project, its purpose, and any relevant information about its development.
+Project is a game-playing application that utilizes various algorithms and heuristics to provide an engaging gameplay experience. This project showcases the implementation of Minmax search and Alpha-beta pruning algorithms, along with multiple heuristics such as stability, mobility, and evaporation.
 
 ## Demo Video
 
@@ -34,16 +34,28 @@ A demo video showcasing the project can be found on YouTube. Click on the badge 
 
 ## Usage
 
-Describe how to run the program and any necessary steps to get it up and running.
+To start playing Project Name, execute the downloaded JAR file by double-clicking it or using the command `java -jar projectname.jar` in the terminal/console.
 
 ## Features
 
-- Provide a high-level overview of the main features of the project.
+Project  includes the following features:
+- Display of valid moves for the current player
+- Restriction of playing invalid moves
 
 ## Supported Algorithms
 
-- Minimax Search: Describe the minimax search algorithm used in game theory and its purpose in the project.
-- Alpha-Beta Pruning: Explain the alpha-beta search algorithm and how it improves efficiency in exploring the game tree.
+Project utilizes the following game-playing algorithms:
+
+1. Minmax Search:
+   - The minimax search algorithm is used to explore the game tree depth-first.
+   - It assigns utility values to the leaves using heuristic functions.
+   - Utility values are propagated back to the root based on whether the node is a min or max node.
+   - The max player aims to maximize their utility value, while the min player aims to minimize it.
+
+2. Alpha-beta Pruning:
+   - The alpha-beta search algorithm is similar to minimax but performs efficient pruning.
+   - It determines when a branch is no longer useful and prunes it.
+   - This allows the algorithm to explore the game tree to greater depths and provide a more powerful lookahead.
 
 ## Heuristics
 
