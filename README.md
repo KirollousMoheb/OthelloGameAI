@@ -59,18 +59,38 @@ Project utilizes the following game-playing algorithms:
 
 ## Heuristics
 
-- Stability: Describe the concept of coin stability in Othello and how it is used as a heuristic. Explain the weights assigned to different categories of stability.
-- Mobility: Explain the strategy of restricting the opponent's mobility and increasing one's own mobility. Differentiate between actual and potential mobility and describe how their heuristic values are calculated.
-- Evaporation: Describe the evaporation strategy in the reverse game and its aim to reduce the opponent's available moves or liberties. Explain how having a lower count of discs can limit the opponent's liberties.
+Project incorporates the following heuristics for game playing:
+
+1. Stability
+   - The concept of coin stability in Othello is used as a heuristic.
+   - Stability is a measure of a coin's vulnerability to being flanked, and coins are classified as stable, semi-stable, or unstable.
+   - Corners are always considered stable, and building upon them increases the stability of nearby coins.
+   - Weights are assigned to each category, and a final stability value for the player is calculated by summing up the weights. A typical weight scheme could be 1 for stable coins, -1 for unstable coins, and 0 for semi-stable coins.
+
+2. Mobility
+   - Mobility is another strategy employed in the game to restrict the opponent's mobility and increase your own.
+   - It can be divided into actual mobility and potential mobility.
+   - Actual mobility represents the number of legal moves a player has, while potential mobility takes into account moves that are currently not legal but could become legal in the future.
+   - The heuristic values for actual and potential mobility are calculated using different methods, considering both complexity and effectiveness.
+
+3. Evaporation
+   - The evaporation strategy is employed in the reverse game to reduce the opponent's available moves or liberties.
+   - By having a lower count of discs, the opponent's liberties are limited, forcing them to make poor moves.
+   - Unlike the regular game, being wiped out is also counted as a victory, but caution is still needed to prevent the opponent from evaporating completely.
 
 ## Supported Game Modes
 
-- Human vs Human: Explain how two human players can play against each other.
-- Human vs AI Agent: Describe the mode where a human player can play against the AI agent.
-- AI Agent vs AI Agent: Explain how the AI agents can play against each other.
+Project  offers the following game modes:
+
+1. Human vs Human: Play against another human player on the same device.
+2. Human vs AI Agent: Challenge yourself by playing against an AI agent.
+3. AI Agent vs AI Agent: Sit back and watch as two AI agents battle it out.
 
 ## Difficulty Levels
 
-- Maximum Difficulty Level: Describe the highest difficulty level supported, the depth used in the search algorithm, and its impact on gameplay.
-- Easy Difficulty Level: Explain the lower difficulty level supported and the corresponding depth used.
+Project provides the following difficulty levels:
 
+- Maximum Difficulty (Depth 9): At the highest difficulty level, the AI employs advanced strategies and algorithms to provide a challenging gameplay experience. Be prepared for a tough match!
+- Easy (Depth 2): If you're looking for a more relaxed gameplay experience, you can choose the easy difficulty level. The AI's moves are less complex, making it more accessible for beginners.
+
+Please note that the AI at the maximum difficulty level is highly skilled, and it becomes very hard to win against it. The AI will consistently outperform human players.
